@@ -17,17 +17,17 @@ export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     title: 'Keto',
   },
   icons: {
-    icon: '/icons/icon-192.png',
-    apple: '/icons/icon-192.png',
+    icon: '/favicon.svg',
+    apple: '/icons/icon.svg',
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0a0a0a',
+  themeColor: '#fafaf9',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -36,10 +36,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${inter.variable} ${interTight.variable}`}>
-      <body className="bg-app min-h-screen font-sans antialiased">
+    <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
+      <body className="bg-app min-h-screen font-sans text-fg antialiased">
         <ServiceWorkerRegister />
-        <div className="mx-auto flex min-h-screen max-w-xl flex-col pb-24">
+        <div className="mx-auto flex min-h-screen max-w-xl flex-col pb-28">
           <main className="flex-1">{children}</main>
         </div>
         <TabBar />

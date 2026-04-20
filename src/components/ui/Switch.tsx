@@ -11,12 +11,12 @@ export const Switch = React.forwardRef<
   <SwitchPrimitive.Root
     ref={ref}
     className={cn(
-      'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border border-border bg-bg-card transition-colors data-[state=checked]:bg-ketosis-good/80',
+      'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border border-border bg-bg-card transition-colors data-[state=checked]:border-ketosis-good data-[state=checked]:bg-ketosis-good',
       className,
     )}
     {...props}
   >
-    <SwitchPrimitive.Thumb className="pointer-events-none block h-5 w-5 translate-x-0.5 rounded-full bg-fg shadow transition-transform data-[state=checked]:translate-x-5 data-[state=checked]:bg-black" />
+    <SwitchPrimitive.Thumb className="pointer-events-none block h-5 w-5 translate-x-0.5 rounded-full bg-white shadow-sm transition-transform data-[state=checked]:translate-x-5" />
   </SwitchPrimitive.Root>
 ));
 Switch.displayName = 'Switch';

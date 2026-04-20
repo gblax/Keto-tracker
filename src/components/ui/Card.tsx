@@ -7,7 +7,25 @@ export function Card({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('rounded-2xl border border-border bg-bg-elevated p-5', className)}
+      className={cn(
+        'rounded-3xl border border-border/70 bg-bg-elevated p-5 shadow-card',
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function CardEyebrow({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        'text-[11px] font-medium uppercase tracking-[0.12em] text-fg-subtle',
+        className,
+      )}
       {...props}
     />
   );

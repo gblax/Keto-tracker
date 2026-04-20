@@ -12,24 +12,34 @@ const ICONS: Record<KetosisState, React.ComponentType<{ size?: number }>> = {
 };
 
 const TONE_CLASSES = {
-  good: 'bg-ketosis-good/10 text-ketosis-good border-ketosis-good/30',
-  warn: 'bg-ketosis-warn/10 text-ketosis-warn border-ketosis-warn/30',
-  bad: 'bg-ketosis-bad/10 text-ketosis-bad border-ketosis-bad/30',
-  muted: 'bg-bg-elevated text-fg-muted border-border',
+  good: 'bg-ketosis-goodSoft text-ketosis-goodDeep ring-ketosis-good/20',
+  warn: 'bg-ketosis-warnSoft text-ketosis-warn ring-ketosis-warn/20',
+  bad: 'bg-ketosis-badSoft text-ketosis-bad ring-ketosis-bad/20',
+  muted: 'bg-bg-card text-fg-muted ring-border',
 } as const;
 
-export function KetosisBadge({ state }: { state: KetosisState }) {
+export function KetosisBadge({
+  state,
+  size = 'md',
+}: {
+  state: KetosisState;
+  size?: 'sm' | 'md';
+}) {
   const Icon = ICONS[state];
   const tone = ketosisStateTone(state);
+  const active = state === 'in_ketosis';
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium',
+        'inline-flex items-center gap-1.5 rounded-full font-medium ring-1 ring-inset',
+        size === 'md' ? 'px-3 py-1.5 text-[13px]' : 'px-2.5 py-1 text-xs',
         TONE_CLASSES[tone],
       )}
     >
-      <Icon size={13} />
-      <span>{ketosisStateLabel(state)}</span>
+      <Icon size={size === 'md' ? 14 : 12} />
+      <span className={cn(active && 'animate-pulse-soft')}>
+        {ketosisStateLabel(state)}
+      </span>
     </div>
   );
 }

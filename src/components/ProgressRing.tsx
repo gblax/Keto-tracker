@@ -16,16 +16,16 @@ interface ProgressRingProps {
 }
 
 const TONE_GRADIENTS: Record<NonNullable<ProgressRingProps['tone']>, [string, string]> = {
-  good: ['#34d399', '#a3e635'],
+  good: ['#10b981', '#84cc16'],
   warn: ['#f59e0b', '#fbbf24'],
-  bad: ['#ef4444', '#f87171'],
+  bad: ['#e11d48', '#fb7185'],
 };
 
 export function ProgressRing({
   value,
   max,
-  size = 240,
-  stroke = 16,
+  size = 260,
+  stroke = 18,
   tone = 'good',
   children,
   className,
@@ -38,7 +38,7 @@ export function ProgressRing({
 
   useEffect(() => {
     const controls = animate(progress, target, {
-      duration: 0.7,
+      duration: 0.9,
       ease: [0.22, 1, 0.36, 1],
     });
     return () => controls.stop();
@@ -49,8 +49,16 @@ export function ProgressRing({
   const gradientId = `ring-${tone}`;
 
   return (
-    <div className={cn('relative flex items-center justify-center', className)} style={{ width: size, height: size }}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+    <div
+      className={cn('relative flex items-center justify-center', className)}
+      style={{ width: size, height: size }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="-rotate-90 drop-shadow-[0_12px_30px_rgba(16,185,129,0.18)]"
+      >
         <defs>
           <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor={from} />
@@ -61,7 +69,7 @@ export function ProgressRing({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#1a1a1a"
+          stroke="#f1f1ef"
           strokeWidth={stroke}
           fill="none"
         />
