@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
@@ -13,6 +14,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { useDayTotal, useEntriesForDate } from '@/hooks/useDayTotal';
 import { useKetosis } from '@/hooks/useKetosis';
 import { Button } from '@/components/ui/Button';
+import { getDb } from '@/lib/db/schema';
 
 export default function HomePage() {
   const router = useRouter();
@@ -21,11 +23,16 @@ export default function HomePage() {
   const entries = useEntriesForDate();
   const ketosis = useKetosis();
 
+  // Read the raw row so we can tell "still loading" (undefined) apart from
+  // "loaded with onboarded=false". Without this we redirect on the first
+  // render before the live query resolves, trapping the user in a loop.
+  const settingsRow = useLiveQuery(() => getDb().settings.get('singleton'), []);
+
   useEffect(() => {
-    if (settings && !settings.onboarded) {
+    if (settingsRow && settingsRow.onboarded === false) {
       router.replace('/onboarding');
     }
-  }, [settings, router]);
+  }, [settingsRow, router]);
 
   const tone: 'good' | 'warn' | 'bad' =
     dayTotal.netCarbsG > settings.dailyLimitG
