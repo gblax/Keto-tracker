@@ -2,6 +2,8 @@
 
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 import { getDb } from '@/lib/db/schema';
 import { rangeISO, shortDay, shortDate, todayISO } from '@/lib/date';
 import { formatGrams } from '@/lib/format';
@@ -96,68 +98,75 @@ export default function HistoryPage() {
             ? Math.min((d.netCarbsG / maxForScale) * 100, 100)
             : 0;
           return (
-            <li
-              key={d.date}
-              className="group relative flex items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-bg-elevated"
-            >
-              <div className="w-16 shrink-0">
-                <div
-                  className={cn(
-                    'text-[13px] font-semibold',
-                    d.isToday ? 'text-ketosis-goodDeep' : 'text-fg',
-                  )}
-                >
-                  {d.isToday ? 'Today' : shortDay(d.date)}
-                </div>
-                <div className="text-[11px] text-fg-subtle">{shortDate(d.date)}</div>
-              </div>
-
-              <div className="relative flex-1">
-                <div className="h-[6px] overflow-hidden rounded-full bg-bg-card">
+            <li key={d.date}>
+              <Link
+                href={`/day/${d.date}`}
+                className="group relative flex items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-bg-elevated"
+              >
+                <div className="w-16 shrink-0">
                   <div
                     className={cn(
-                      'h-full rounded-full transition-all',
-                      over
-                        ? 'bg-gradient-to-r from-ketosis-warn to-ketosis-bad'
-                        : 'bg-gradient-to-r from-ketosis-good to-ketosis-goodEnd',
+                      'text-[13px] font-semibold',
+                      d.isToday ? 'text-ketosis-goodDeep' : 'text-fg',
                     )}
-                    style={{ width: `${barWidth}%` }}
+                  >
+                    {d.isToday ? 'Today' : shortDay(d.date)}
+                  </div>
+                  <div className="text-[11px] text-fg-subtle">{shortDate(d.date)}</div>
+                </div>
+
+                <div className="relative flex-1">
+                  <div className="h-[6px] overflow-hidden rounded-full bg-bg-card">
+                    <div
+                      className={cn(
+                        'h-full rounded-full transition-all',
+                        over
+                          ? 'bg-gradient-to-r from-ketosis-warn to-ketosis-bad'
+                          : 'bg-gradient-to-r from-ketosis-good to-ketosis-goodEnd',
+                      )}
+                      style={{ width: `${barWidth}%` }}
+                    />
+                  </div>
+                  <div
+                    className="absolute left-0 top-1/2 h-3 w-px -translate-y-1/2 bg-border-strong"
+                    style={{
+                      left: `${Math.min(
+                        (settings.ketosisThresholdG / maxForScale) * 100,
+                        100,
+                      )}%`,
+                    }}
+                    aria-hidden
                   />
                 </div>
-                <div
-                  className="absolute left-0 top-1/2 h-3 w-px -translate-y-1/2 bg-border-strong"
-                  style={{
-                    left: `${Math.min(
-                      (settings.ketosisThresholdG / maxForScale) * 100,
-                      100,
-                    )}%`,
-                  }}
-                  aria-hidden
-                />
-              </div>
 
-              <div className="w-20 shrink-0 text-right">
-                {d.hasData ? (
-                  <>
-                    <span
-                      className={cn(
-                        'tnum font-display text-base font-semibold',
-                        over ? 'text-ketosis-bad' : 'text-fg',
+                <div className="w-20 shrink-0 text-right">
+                  {d.hasData ? (
+                    <>
+                      <span
+                        className={cn(
+                          'tnum font-display text-base font-semibold',
+                          over ? 'text-ketosis-bad' : 'text-fg',
+                        )}
+                      >
+                        {formatGrams(d.netCarbsG)}
+                        <span className="ml-0.5 text-xs font-normal text-fg-subtle">g</span>
+                      </span>
+                      {d.entryCount > 0 && (
+                        <div className="text-[10px] text-fg-subtle">
+                          {d.entryCount} {d.entryCount === 1 ? 'item' : 'items'}
+                        </div>
                       )}
-                    >
-                      {formatGrams(d.netCarbsG)}
-                      <span className="ml-0.5 text-xs font-normal text-fg-subtle">g</span>
-                    </span>
-                    {d.entryCount > 0 && (
-                      <div className="text-[10px] text-fg-subtle">
-                        {d.entryCount} {d.entryCount === 1 ? 'item' : 'items'}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <span className="text-xs text-fg-subtle">—</span>
-                )}
-              </div>
+                    </>
+                  ) : (
+                    <span className="text-xs text-fg-subtle">—</span>
+                  )}
+                </div>
+
+                <ChevronRight
+                  size={14}
+                  className="ml-1 shrink-0 text-fg-subtle opacity-0 transition-opacity group-hover:opacity-100"
+                />
+              </Link>
             </li>
           );
         })}

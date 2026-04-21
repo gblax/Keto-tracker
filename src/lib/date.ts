@@ -31,3 +31,16 @@ export function shortDate(iso: string): string {
   const d = isoToDate(iso);
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
+
+export function longDate(iso: string): string {
+  const d = isoToDate(iso);
+  return d.toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+export function isValidISO(s: string | null | undefined): s is string {
+  return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+}

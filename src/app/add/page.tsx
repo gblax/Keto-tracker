@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Sparkles, Loader2, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import { parseFoods, MissingApiKeyError } from '@/lib/ai/parseFoods';
 import { addEntries } from '@/lib/db/entries';
 import { useSettings } from '@/hooks/useSettings';
 import { formatGrams } from '@/lib/format';
+import { isValidISO, longDate, todayISO } from '@/lib/date';
 
 const EXAMPLES = [
   'two eggs, bacon, and coffee with cream',
@@ -20,8 +21,21 @@ const EXAMPLES = [
 ];
 
 export default function AddPage() {
+  return (
+    <Suspense fallback={null}>
+      <AddPageInner />
+    </Suspense>
+  );
+}
+
+function AddPageInner() {
   const router = useRouter();
   const settings = useSettings();
+  const search = useSearchParams();
+  const dateParam = search.get('date');
+  const targetDate = isValidISO(dateParam) ? dateParam : todayISO();
+  const isToday = targetDate === todayISO();
+
   const [text, setText] = useState('');
   const [items, setItems] = useState<EditableItem[] | null>(null);
   const [rawInput, setRawInput] = useState('');
@@ -29,6 +43,7 @@ export default function AddPage() {
   const [error, setError] = useState<string | null>(null);
 
   const hasKey = !!settings.anthropicApiKey;
+  const backHref = isToday ? '/' : `/day/${targetDate}`;
 
   async function handleParse() {
     setError(null);
@@ -79,8 +94,9 @@ export default function AddPage() {
         source: 'ai',
         rawInput,
       })),
+      targetDate,
     );
-    router.push('/');
+    router.push(backHref);
   }
 
   const total = items?.reduce((s, it) => s + (Number(it.net_carbs_g) || 0), 0) ?? 0;
@@ -90,7 +106,7 @@ export default function AddPage() {
     <div className="flex flex-col px-5 pt-5">
       <div className="flex items-center justify-between">
         <Link
-          href="/"
+          href={backHref}
           className="-ml-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm text-fg-hint transition-colors hover:bg-bg-card hover:text-fg"
         >
           <ArrowLeft size={16} /> Back
@@ -100,6 +116,12 @@ export default function AddPage() {
         </h1>
         <span className="w-16" />
       </div>
+
+      {!isToday && (
+        <div className="mt-4 rounded-2xl border border-ketosis-good/20 bg-ketosis-goodSoft/40 px-4 py-2.5 text-xs text-ketosis-goodDeep">
+          Logging to <span className="font-semibold">{longDate(targetDate)}</span>
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         {!items ? (
