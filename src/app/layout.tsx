@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
       <body className="bg-app min-h-screen font-sans text-fg antialiased">
         <ServiceWorkerRegister />
-        <div className="mx-auto flex min-h-screen max-w-xl flex-col pb-28">
+        <div className="mx-auto flex min-h-screen max-w-xl flex-col pb-44">
           <main className="flex-1">{children}</main>
         </div>
         <TabBar />

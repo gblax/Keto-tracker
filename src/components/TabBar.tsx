@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 
 const TABS = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/add', label: 'Log', icon: Plus, emphasized: true },
   { href: '/history', label: 'History', icon: History },
   { href: '/settings', label: 'Settings', icon: SettingsIcon },
 ];
@@ -19,26 +18,20 @@ export function TabBar() {
   return (
     <nav
       aria-label="Primary"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-[calc(env(safe-area-inset-bottom)+12px)]"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-3 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)]"
     >
+      <Link
+        href="/add"
+        aria-label="Log"
+        className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-b from-ketosis-good to-ketosis-goodDeep text-white shadow-[0_6px_18px_rgba(16,185,129,0.4),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform active:scale-95"
+      >
+        <Plus size={24} strokeWidth={2.5} />
+      </Link>
+
       <ul className="pointer-events-auto flex items-stretch gap-1 rounded-full border border-border/80 bg-bg-elevated/95 p-1.5 shadow-tab backdrop-blur-xl">
-        {TABS.map(({ href, label, icon: Icon, emphasized }) => {
+        {TABS.map(({ href, label, icon: Icon }) => {
           const active =
             pathname === href || (href !== '/' && pathname.startsWith(href));
-
-          if (emphasized) {
-            return (
-              <li key={href}>
-                <Link
-                  href={href}
-                  aria-label={label}
-                  className="group flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-b from-ketosis-good to-ketosis-goodDeep text-white shadow-[0_4px_12px_rgba(16,185,129,0.35),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform active:scale-95"
-                >
-                  <Icon size={20} strokeWidth={2.5} />
-                </Link>
-              </li>
-            );
-          }
 
           return (
             <li key={href}>
